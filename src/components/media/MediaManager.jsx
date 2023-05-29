@@ -79,9 +79,6 @@ const MediaManager = () => {
   };
 
   if (error) {
-    console.log("^^^^^^^^^^^^^^^^^^^^");
-    console.log(error);
-    console.log("^^^^^^^^^^^^^^^^^^^^");
     return (
       <>
         <UploadWidget revalidateData={mutate} />
@@ -104,10 +101,6 @@ const MediaManager = () => {
       </>
     );
   }
-
-  console.log("^^^^^^^^^^^^^^^^^^^^");
-  console.log(data);
-  console.log("^^^^^^^^^^^^^^^^^^^^");
 
   return (
     <>
