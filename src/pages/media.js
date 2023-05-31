@@ -17,13 +17,13 @@ const Media = () => {
 
   const { mutate } = useSWRConfig();
   const fetcher = (url) => fetch(url).then((res) => res.json());
-  const { data, error } = useSWR("/api/media", fetcher);
+  const { data, error } = useSWR("/api/admin/media", fetcher);
 
   // close modal after deletion
   const handleCloseModal = () => {
     setSelectedMedia(null);
     close();
-    mutate("/api/media");
+    mutate("/api/admin/media");
   };
 
   if (error) {

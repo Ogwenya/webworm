@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import authOptions from "../auth/[...nextauth]";
 import { connectDB } from "@/utils/db";
-import { deleteMedia } from "@/controllers/mediaController";
+import { getTerms, updateTerms } from "@/controllers/termsController";
 
 export default async function handler(req, res) {
   await connectDB();
@@ -14,12 +14,15 @@ export default async function handler(req, res) {
   }
 
   switch (method) {
-    case "DELETE":
-      return deleteMedia(req, res);
+    case "GET":
+      getTerms(req, res);
+      break;
+    case "PATCH":
+      updateTerms(req, res);
       break;
 
     default:
-      res.setHeader("Allow", ["DELETE"]);
+      res.setHeader("Allow", ["GET", "PATCH"]);
       res.status(405).end(`Method ${method} Not Allowed`);
       break;
   }

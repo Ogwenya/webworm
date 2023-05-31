@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import authOptions from "../auth/[...nextauth]";
 import { connectDB } from "@/utils/db";
-import { getMedia } from "@/controllers/mediaController";
+import { getPolicy, updatePolicy } from "@/controllers/policyController";
 
 export default async function handler(req, res) {
   await connectDB();
@@ -15,11 +15,14 @@ export default async function handler(req, res) {
 
   switch (method) {
     case "GET":
-      return getMedia(req, res);
+      getPolicy(req, res);
+      break;
+    case "PATCH":
+      updatePolicy(req, res);
       break;
 
     default:
-      res.setHeader("Allow", ["GET"]);
+      res.setHeader("Allow", ["GET", "PATCH"]);
       res.status(405).end(`Method ${method} Not Allowed`);
       break;
   }

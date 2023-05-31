@@ -42,7 +42,7 @@ const Profile = () => {
 
   //   send data to API
   const submitData = async (update, data) => {
-    const apiUrl = `/api/users/${session.user.id}?update=${update}`;
+    const apiUrl = `/api/admin/users/${session.user.id}?update=${update}`;
 
     const res = await fetch(apiUrl, {
       method: "PATCH",

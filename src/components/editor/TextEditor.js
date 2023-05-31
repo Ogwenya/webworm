@@ -22,7 +22,7 @@ const ReactQuill = dynamic(
 const TextEditor = ({ editorContent, setEditorContent }) => {
   const { mutate } = useSWRConfig();
   const fetcher = (url) => fetch(url).then((res) => res.json());
-  const { data, error } = useSWR("/api/media", fetcher);
+  const { data, error } = useSWR("/api/admin/media", fetcher);
 
   const quillRef = useRef(null);
   const [opened, { open, close }] = useDisclosure(false);

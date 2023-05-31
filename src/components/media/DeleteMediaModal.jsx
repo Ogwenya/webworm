@@ -12,7 +12,7 @@ const DeleteMediaModal = ({ media, closeModal }) => {
     setLoading(true);
     setAlertMessage({ type: "info", message: "Deleting..." });
     const res = await fetch(
-      `/api/media/${publicId}?resource_type=${media.resource_type}`,
+      `/api/admin/media/${publicId}?resource_type=${media.resource_type}`,
       {
         method: "DELETE",
       }
