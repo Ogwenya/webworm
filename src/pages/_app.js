@@ -7,6 +7,8 @@ import {
   ColorScheme,
 } from "@mantine/core";
 import Layout from "@/components/Layout.js";
+import "react-quill/dist/quill.snow.css";
+import "react-quill/dist/quill.bubble.css";
 import "@/styles/globals.css";
 
 export default function App({ Component, pageProps }) {

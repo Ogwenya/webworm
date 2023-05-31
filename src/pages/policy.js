@@ -1,5 +1,18 @@
+import { useState, useEffect, useRef } from "react";
+import TextEditor from "@/components/editor/TextEditor";
+
 const Policy = () => {
-  return <h1>Privacy policy</h1>;
+  const [editorContent, setEditorContent] = useState("");
+
+  return (
+    <>
+      <h1>Privacy policy</h1>
+      <TextEditor
+        editorContent={editorContent}
+        setEditorContent={setEditorContent}
+      />
+    </>
+  );
 };
 
 export default Policy;
