@@ -1,7 +1,7 @@
 import formidable from "formidable";
 import slugify from "slugify";
 import Post from "@/models/postModel";
-import { uploadImage } from "@/utils/cloudinary_ops";
+import { uploadImage, deleteImage } from "@/utils/cloudinary_ops";
 
 // ###################################
 // ########## GET All Posts ##########
@@ -66,6 +66,101 @@ export const getPost = async (req, res) => {
     const { slug } = req.query;
     const post = await Post.findOne({ slug });
     return res.status(200).json({ post });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+// #################################
+// ########## UPDATE POST ##########
+// #################################
+export const updatePost = async (req, res) => {
+  try {
+    const { slug, update } = req.query;
+    const post = await Post.findOne({ slug });
+
+    if (post === null) {
+      return res.status(400).json({
+        error: "This post does not exist.",
+      });
+    }
+
+    // publish or unpublish article
+    if (update === "publish") {
+      const form = new formidable.IncomingForm();
+      form.parse(req, async (err, fields) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: "An error occurred" });
+        } else {
+          const { isPublished } = fields;
+
+          post.isPublished = isPublished;
+          await post.save();
+
+          return res.status(200).json({ success: "update successfull." });
+        }
+      });
+    }
+
+    // update article content
+    if (update === "content") {
+      const form = new formidable.IncomingForm();
+      form.parse(req, async (err, fields, files) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: "An error occurred" });
+        } else {
+          const { title, body, excerpt, key_words } = fields;
+          const { feature_image } = files;
+
+          let update;
+
+          if (feature_image) {
+            // if feature image is provided, upload it
+            const uploaded_image = await uploadImage(
+              feature_image.filepath,
+              "webworm/posts/feature_images"
+            );
+
+            update = {
+              title: title,
+              slug: slugify(title, { lower: true, locale: "en" }),
+              excerpt: excerpt,
+              feature_image: {
+                url: uploaded_image.secure_url,
+                public_id: uploaded_image.public_id,
+              },
+              body: body,
+              key_words: key_words.split(","),
+            };
+
+            // delete previous feature image
+            const deletedImage = await deleteImage(
+              post.feature_image.public_id
+            );
+          } else {
+            update = {
+              title: title,
+              slug: slugify(title, { lower: true, locale: "en" }),
+              excerpt: excerpt,
+              body: body,
+              key_words: key_words.split(","),
+            };
+          }
+
+          const updated_post = await Post.findByIdAndUpdate(post.id, update, {
+            new: true,
+            runValidators: true,
+          });
+
+          return res.status(200).json({
+            success: "post edited successfully.",
+            slug: updated_post.slug,
+          });
+        }
+      });
+    }
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }

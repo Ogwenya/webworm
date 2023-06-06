@@ -1,7 +1,13 @@
 import { getServerSession } from "next-auth/next";
 import authOptions from "../../auth/[...nextauth]";
 import { connectDB } from "@/utils/db";
-import { getPost } from "@/controllers/postController";
+import { getPost, updatePost } from "@/controllers/postController";
+
+export const config = {
+  api: {
+    bodyParser: false, // Disable built-in bodyParser
+  },
+};
 
 export default async function handler(req, res) {
   await connectDB();
@@ -17,9 +23,12 @@ export default async function handler(req, res) {
     case "GET":
       getPost(req, res);
       break;
+    case "PATCH":
+      updatePost(req, res);
+      break;
 
     default:
-      res.setHeader("Allow", ["GET"]);
+      res.setHeader("Allow", ["GET", "PATCH"]);
       res.status(405).end(`Method ${method} Not Allowed`);
       break;
   }

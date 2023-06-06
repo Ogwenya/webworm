@@ -18,6 +18,7 @@ const PostEditor = ({
   alertMessage,
   loading,
   saveArticle,
+  handlePublish,
   article_route,
 }) => {
   const [previewImage, setPreviewImage] = useState(null);
@@ -76,8 +77,15 @@ const PostEditor = ({
             </Button>
 
             {article_route === "edit" && (
-              <Button radius="md" variant="outline" uppercase loading={loading}>
-                Move to Draft
+              <Button
+                radius="md"
+                variant="outline"
+                color={data.isPublished ? "blue" : "green"}
+                uppercase
+                loading={loading}
+                onClick={handlePublish}
+              >
+                {data.isPublished ? " Move to Draft" : "Publish"}
               </Button>
             )}
           </Group>
@@ -109,7 +117,17 @@ const PostEditor = ({
               />
 
               {/* Feature Image */}
-              {data.featureImage && <Image src={previewImage} alt="Preview" />}
+              {article_route === "create" ? (
+                data.featureImage && <Image src={previewImage} alt="Preview" />
+              ) : (
+                <Image
+                  src={
+                    data.featureImage ? previewImage : data.currentFeatureImage
+                  }
+                  alt="Preview"
+                />
+              )}
+
               <FileInput
                 label="Feature Image"
                 placeholder="Select Image"
