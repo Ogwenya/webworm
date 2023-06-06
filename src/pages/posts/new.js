@@ -1,18 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
-import {
-  Grid,
-  Stack,
-  Group,
-  Paper,
-  TextInput,
-  FileInput,
-  Button,
-  Textarea,
-  Image,
-  Alert,
-} from "@mantine/core";
-import TextEditor from "@/components/editor/TextEditor";
+import PostEditor from "@/components/posts/PostEditor";
 
 const CreateArticle = () => {
   const router = useRouter();
@@ -25,20 +13,6 @@ const CreateArticle = () => {
 
   const [alertMessage, setAlertMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [previewImage, setPreviewImage] = useState(null);
-
-  // feature image preview
-  useEffect(() => {
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setPreviewImage(reader.result);
-    };
-
-    if (featureImage) {
-      reader.readAsDataURL(featureImage);
-    }
-  }, [featureImage]);
 
   // save article
   const saveArticle = async () => {
@@ -103,97 +77,24 @@ const CreateArticle = () => {
   };
 
   return (
-    <>
-      {alertMessage && (
-        <Alert
-          color={
-            alertMessage.type === "info"
-              ? "cyan"
-              : alertMessage.type === "error"
-              ? "red"
-              : "green"
-          }
-          radius="md"
-          m="md"
-        >
-          {alertMessage.message}
-        </Alert>
-      )}
-
-      <Grid>
-        {/* Article title */}
-        <Grid.Col span={9}>
-          <TextInput
-            placeholder="Article title..."
-            value={title}
-            onChange={(event) => setTitle(event.currentTarget.value)}
-          />
-        </Grid.Col>
-
-        {/* Action buttons: Save */}
-        <Grid.Col span={3}>
-          <Group position="right">
-            <Button
-              color="green"
-              radius="md"
-              uppercase
-              loading={loading}
-              onClick={saveArticle}
-            >
-              Save
-            </Button>
-          </Group>
-        </Grid.Col>
-
-        {/* EDITOR */}
-        <Grid.Col span={9}>
-          <Paper shadow="sm" p="md">
-            <TextEditor
-              editorContent={editorContent}
-              setEditorContent={setEditorContent}
-            />
-          </Paper>
-        </Grid.Col>
-
-        {/* OTHER DETAILS: Excerpt, Feature Image, Key words */}
-        <Grid.Col span={3} shadow="md">
-          <Paper shadow="sm" p="md">
-            <Stack>
-              {/* Excerpt */}
-              <Textarea
-                placeholder="Article Excerpt"
-                label="Excerpt"
-                autosize
-                minRows={2}
-                withAsterisk
-                value={excerpt}
-                onChange={(event) => setExcerpt(event.currentTarget.value)}
-              />
-
-              {/* Feature Image */}
-              {featureImage && <Image src={previewImage} alt="Preview" />}
-              <FileInput
-                label="Feature Image"
-                placeholder="Select Image"
-                value={featureImage}
-                onChange={setFeatureImage}
-                withAsterisk
-              />
-
-              {/* Key words */}
-              <Textarea
-                placeholder="Key words seperated by a comma"
-                label="Key words"
-                autosize
-                minRows={2}
-                value={key_words}
-                onChange={(event) => setKey_words(event.currentTarget.value)}
-              />
-            </Stack>
-          </Paper>
-        </Grid.Col>
-      </Grid>
-    </>
+    <PostEditor
+      data={{
+        title,
+        setTitle,
+        editorContent,
+        setEditorContent,
+        featureImage,
+        setFeatureImage,
+        excerpt,
+        setExcerpt,
+        key_words,
+        setKey_words,
+      }}
+      alertMessage={alertMessage}
+      loading={loading}
+      saveArticle={saveArticle}
+      article_route={"create"}
+    />
   );
 };
 
