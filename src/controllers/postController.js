@@ -24,13 +24,16 @@ export const getPosts = async (req, res) => {
     }
 
     const startIndex = (page - 1) * per_page;
-    const total = await Post.find(query).count();
+    const total_posts = await Post.find(query).count();
     const posts = await Post.find(query)
       .skip(startIndex)
       .limit(per_page)
       .sort({ updatedAt: -1 });
 
-    return res.status(200).json({ posts, total });
+    const totalPages = Math.ceil(total_posts / per_page);
+    return res
+      .status(200)
+      .json({ posts, total_posts, totalPages, startIndex, per_page });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }

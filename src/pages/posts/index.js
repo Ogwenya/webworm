@@ -22,6 +22,8 @@ import {
   IconSearch,
   IconPlus,
   IconArticleOff,
+  IconSquareRoundedChevronLeft,
+  IconSquareRoundedChevronRight,
 } from "@tabler/icons-react";
 
 const Posts = () => {
@@ -29,7 +31,6 @@ const Posts = () => {
   const [category, setCategory] = useState("all");
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
-  const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
 
   const { mutate } = useSWRConfig();
@@ -118,35 +119,70 @@ const Posts = () => {
         </Flex>
 
         {data.posts.length > 0 ? (
-          <Table>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Publish Status</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.posts.map((post) => (
-                <tr key={post._id}>
-                  <td>{post.title}</td>
-                  <td>{post.isPublished ? "Published" : "Draft"}</td>
-                  <td>
-                    <Flex>
-                      <Link href="/posts/[slug]" as={`/posts/${post.slug}`}>
-                        <ActionIcon>
-                          <IconPencil size="1.3rem" color="blue" />
-                        </ActionIcon>
-                      </Link>
-                      <ActionIcon>
-                        <IconTrash size="1.3rem" color="red" />
-                      </ActionIcon>
-                    </Flex>
-                  </td>
+          <>
+            <Table>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Publish Status</th>
+                  <th></th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {data.posts.map((post) => (
+                  <tr key={post._id}>
+                    <td>{post.title}</td>
+                    <td>{post.isPublished ? "Published" : "Draft"}</td>
+                    <td>
+                      <Flex>
+                        <Link href="/posts/[slug]" as={`/posts/${post.slug}`}>
+                          <ActionIcon>
+                            <IconPencil size="1.3rem" color="blue" />
+                          </ActionIcon>
+                        </Link>
+                        <ActionIcon>
+                          <IconTrash size="1.3rem" color="red" />
+                        </ActionIcon>
+                      </Flex>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+
+            {/* pagination */}
+            <Group position="apart" p="lg" m={20}>
+              <Text c="gray" fz="sm">
+                Showing {data.startIndex + 1}-
+                {data.total_posts >= data.startIndex + data.per_page
+                  ? data.startIndex + data.per_page
+                  : data.total_posts}{" "}
+                of {data.total_posts}
+              </Text>
+              <Group position="right">
+                {/* previous page button */}
+                <ActionIcon
+                  variant="transparent"
+                  disabled={page <= 1}
+                  onClick={() => setPage(page - 1)}
+                >
+                  <IconSquareRoundedChevronLeft />
+                </ActionIcon>
+                <Text c="gray" fz="sm">
+                  Page {page}
+                </Text>
+
+                {/* next page button */}
+                <ActionIcon
+                  variant="transparent"
+                  disabled={page === data.totalPages}
+                  onClick={() => setPage(page + 1)}
+                >
+                  <IconSquareRoundedChevronRight />
+                </ActionIcon>
+              </Group>
+            </Group>
+          </>
         ) : (
           <Group p="md">
             <IconArticleOff color="gray" />

@@ -8,3 +8,8 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.mantine-vmeue4:disabled,
+.mantine-vmeue4[data-disabled] {
+  pointer-events: auto;
+}
