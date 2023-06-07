@@ -8,9 +8,29 @@ import { uploadImage, deleteImage } from "@/utils/cloudinary_ops";
 // ###################################
 export const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find();
+    let query = {};
+    const page = parseInt(req.query.page, 10);
+    const per_page = 10;
+    const { search, filter } = req.query;
 
-    return res.status(200).json(posts);
+    if (filter === "published") {
+      query.isPublished = true;
+    } else if (filter === "unpublished") {
+      query.isPublished = false;
+    }
+
+    if (search) {
+      query.title = { $regex: search, $options: "i" };
+    }
+
+    const startIndex = (page - 1) * per_page;
+    const total = await Post.find(query).count();
+    const posts = await Post.find(query)
+      .skip(startIndex)
+      .limit(per_page)
+      .sort({ updatedAt: -1 });
+
+    return res.status(200).json({ posts, total });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
