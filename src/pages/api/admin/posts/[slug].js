@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import authOptions from "../../auth/[...nextauth]";
 import { connectDB } from "@/utils/db";
-import { getPost, updatePost } from "@/controllers/postController";
+import { getPost, updatePost, deletePost } from "@/controllers/postController";
 
 export const config = {
   api: {
@@ -26,9 +26,12 @@ export default async function handler(req, res) {
     case "PATCH":
       updatePost(req, res);
       break;
+    case "DELETE":
+      deletePost(req, res);
+      break;
 
     default:
-      res.setHeader("Allow", ["GET", "PATCH"]);
+      res.setHeader("Allow", ["GET", "PATCH", "DELETE"]);
       res.status(405).end(`Method ${method} Not Allowed`);
       break;
   }

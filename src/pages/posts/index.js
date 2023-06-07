@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import useSWR, { useSWRConfig } from "swr";
+import { useDisclosure } from "@mantine/hooks";
 import {
   Title,
   Text,
@@ -15,6 +16,7 @@ import {
   Table,
   TextInput,
   Group,
+  Modal,
 } from "@mantine/core";
 import {
   IconPencil,
@@ -25,8 +27,15 @@ import {
   IconSquareRoundedChevronLeft,
   IconSquareRoundedChevronRight,
 } from "@tabler/icons-react";
+import DeletePostModal from "@/components/posts/DeletePostModal";
 
 const Posts = () => {
+  // deletion modal controls
+  const [opened, { open, close }] = useDisclosure(false);
+
+  // select post for deletion
+  const [selectedPost, setSelectedPost] = useState(null);
+
   // category of articles to display: 'all', 'published', 'unpublished'
   const [category, setCategory] = useState("all");
   const [searchInput, setSearchInput] = useState("");
@@ -40,9 +49,19 @@ const Posts = () => {
     fetcher
   );
 
+  // search for post
   const handleSearch = async (e) => {
     e.preventDefault();
     setSearch(searchInput);
+  };
+
+  // close modal after deletion
+  const handleCloseModal = () => {
+    setSelectedPost(null);
+    mutate(
+      `/api/admin/posts?page=${page}&filter=${category}&search=${search}&delay=1`
+    );
+    close();
   };
 
   const header = (
@@ -140,7 +159,7 @@ const Posts = () => {
                             <IconPencil size="1.3rem" color="blue" />
                           </ActionIcon>
                         </Link>
-                        <ActionIcon>
+                        <ActionIcon onClick={() => setSelectedPost(post)}>
                           <IconTrash size="1.3rem" color="red" />
                         </ActionIcon>
                       </Flex>
@@ -190,6 +209,13 @@ const Posts = () => {
           </Group>
         )}
       </Paper>
+
+      {/* deletion modal */}
+      {selectedPost && (
+        <Modal opened onClose={handleCloseModal} title="Delete Article">
+          <DeletePostModal post={selectedPost} closeModal={handleCloseModal} />
+        </Modal>
+      )}
     </>
   );
 };

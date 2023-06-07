@@ -188,3 +188,21 @@ export const updatePost = async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 };
+
+// #################################
+// ########## UPDATE POST ##########
+// #################################
+export const deletePost = async (req, res) => {
+  try {
+    const { slug } = req.query;
+    const post = await Post.findOne({ slug });
+
+    // delete post and feature image
+    const deleted_post = await Post.findByIdAndDelete(post._id);
+    const deletedImage = await deleteImage(post.feature_image.public_id);
+
+    return res.status(200).json({ success: "Article deleted" });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
