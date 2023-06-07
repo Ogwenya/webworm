@@ -8,7 +8,6 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import {
-  IconLayoutDashboard,
   IconArticle,
   IconCamera,
   IconPencil,
@@ -17,7 +16,6 @@ import {
 } from "@tabler/icons-react";
 
 const SidebarItems = [
-  { name: "Dashboard", link: "/", icon: IconLayoutDashboard },
   {
     name: "Posts",
     link: "/posts",

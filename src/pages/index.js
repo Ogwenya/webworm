@@ -1,5 +1,9 @@
+import { useRouter } from "next/router";
+
 const Home = () => {
-  return <h1>Home page</h1>;
+  const router = useRouter();
+
+  router.push("/posts");
 };
 
 export default Home;
