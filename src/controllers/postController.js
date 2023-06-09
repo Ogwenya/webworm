@@ -190,7 +190,7 @@ export const updatePost = async (req, res) => {
 };
 
 // #################################
-// ########## UPDATE POST ##########
+// ########## DELETE POST ##########
 // #################################
 export const deletePost = async (req, res) => {
   try {

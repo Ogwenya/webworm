@@ -3,6 +3,7 @@ import Link from "next/link";
 import useSWR, { useSWRConfig } from "swr";
 import { useDisclosure } from "@mantine/hooks";
 import {
+  useMantineTheme,
   Title,
   Text,
   Center,
@@ -26,10 +27,12 @@ import {
   IconArticleOff,
   IconSquareRoundedChevronLeft,
   IconSquareRoundedChevronRight,
+  IconArrowRight,
 } from "@tabler/icons-react";
 import DeletePostModal from "@/components/posts/DeletePostModal";
 
 const Posts = () => {
+  const theme = useMantineTheme();
   // deletion modal controls
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -113,17 +116,25 @@ const Posts = () => {
         {/* search and filter */}
         <Flex align="center" direction="row" justify="space-between" mb="lg">
           {/* search bar */}
-          <form onSubmit={handleSearch}>
-            <Flex align="center" direction="row" wrap="nowrap">
-              <TextInput
-                placeholder="Search by any field"
-                icon={<IconSearch size="0.9rem" stroke={1.5} />}
-                value={searchInput}
-                onChange={(event) => setSearchInput(event.currentTarget.value)}
-              />
-              <Button type="submit">Search</Button>
-            </Flex>
-          </form>
+          <TextInput
+            radius="xl"
+            size="md"
+            placeholder="Search by any field"
+            icon={<IconSearch size="0.9rem" stroke={1.5} />}
+            value={searchInput}
+            onChange={(event) => setSearchInput(event.currentTarget.value)}
+            rightSection={
+              <ActionIcon
+                size={32}
+                radius="xl"
+                variant="filled"
+                color={theme.primaryColor}
+                onClick={handleSearch}
+              >
+                <IconArrowRight size="1.1rem" stroke={1.5} />
+              </ActionIcon>
+            }
+          />
 
           {/* filters */}
           <SegmentedControl
