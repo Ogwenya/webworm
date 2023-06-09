@@ -8,7 +8,6 @@ import {
   TextInput,
   Button,
   List,
-  Flex,
   ActionIcon,
   useMantineTheme,
   rem,
