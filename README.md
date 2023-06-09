@@ -133,3 +133,13 @@ headers: {
 | `/api/v0/posts/[slug]` | GET    | Fetch single post         |
 | `/api/v0/policy`       | GET    | Get privacy policy        |
 | `/api/v0/terms`        | GET    | Get Terms and Conditions  |
+
+The `/api/v0/posts` can have the following query params:
+
+- page : The page number to fetch
+- per_page : The total posts to return per page
+- search : The search string to search for posts
+
+#### Example
+
+`/api/v0/posts?page=2&per_page=20` will return posts in the second page with 20 posts per page
