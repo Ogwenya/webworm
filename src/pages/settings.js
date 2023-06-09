@@ -107,7 +107,6 @@ const Settings = () => {
     );
   }
 
-  console.log(data.host);
   return (
     <>
       <Paper p="md">
