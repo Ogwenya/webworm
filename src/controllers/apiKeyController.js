@@ -1,15 +1,5 @@
-import bcrypt, { compare } from "bcryptjs";
+import bcrypt from "bcryptjs";
 import ApiKey from "@/models/apiKeyModel";
-
-// validate url string
-function isValidUrl(string) {
-  try {
-    new URL(string);
-    return true;
-  } catch (err) {
-    return false;
-  }
-}
 
 // ##################################
 // ########## GET API KEYS ##########
@@ -28,21 +18,15 @@ export const getApiKeys = async (req, res) => {
 // #####################################
 export const createApiKey = async (req, res) => {
   try {
-    const { host } = await JSON.parse(req.body);
-    const validadedUrl = await isValidUrl(host);
+    const { name } = await JSON.parse(req.body);
 
-    // check if provided host is valid
-    if (!validadedUrl) {
-      return res.status(400).json({ error: "The URL provided is invalid" });
-    }
+    // check if provided name already exist
+    const nameExists = await ApiKey.findOne({ name });
 
-    // check if provided host already exist
-    const hostExists = await ApiKey.findOne({ host });
-
-    if (hostExists) {
+    if (nameExists) {
       return res
         .status(400)
-        .json({ error: "Host already associated with existing api key" });
+        .json({ error: "Name already associated with existing api key" });
     }
 
     // generate API Key and hash it
@@ -55,7 +39,7 @@ export const createApiKey = async (req, res) => {
 
     // save api key to db
     const apiKey = await ApiKey.create({
-      host,
+      name,
       key: encryptedKey,
     });
 

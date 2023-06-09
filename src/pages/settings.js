@@ -30,9 +30,9 @@ const Settings = () => {
   const isTablet = useMediaQuery("(max-width: 63em)");
   const clipboard = useClipboard({ timeout: 500 });
 
-  const [host, setHost] = useState("");
+  const [name, setName] = useState("");
   const [apiKey, setApiKey] = useState("");
-  const [hostError, setHostError] = useState("");
+  const [nameError, setNameError] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedKey, setSelectedKey] = useState(null);
@@ -44,23 +44,23 @@ const Settings = () => {
   // generate api key
   const generateKey = async () => {
     try {
-      setHostError("");
+      setNameError("");
       setAlertMessage("");
 
-      if (!host) {
-        setHostError("API key must be associated with a host");
+      if (!name) {
+        setNameError("API key must be associated with a name");
       } else {
         setLoading(true);
         const res = await fetch("/api/admin/apiKey", {
           method: "POST",
-          body: JSON.stringify({ host }),
+          body: JSON.stringify({ name }),
         });
 
         const result = await res.json();
 
         if (result.sucess) {
           setLoading(false);
-          setHost("");
+          setName("");
           setApiKey(result.apiKey);
           mutate("/api/admin/apiKey");
         }
@@ -116,16 +116,8 @@ const Settings = () => {
         {/* info */}
         <List size="sm" mb="lg" withPadding>
           <List.Item>
-            Enter the host domain for the blog frontend that will make API calls
-            to this backend.
-          </List.Item>
-          <List.Item>
-            The API Key will only work for the specific domain provided to
-            ensure if leaked, cannot be used to access the server.
-          </List.Item>
-          <List.Item>
-            The host must start with either <Code>http://</Code> or
-            <Code>https://</Code>
+            Enter a name which will help identify the api key incase more keys
+            are generated.
           </List.Item>
         </List>
 
@@ -141,12 +133,12 @@ const Settings = () => {
           </Alert>
         )}
         <TextInput
-          placeholder="https://example.com"
-          label="Host"
+          placeholder="api key name"
+          label="Name"
           radius="md"
           mb="xl"
-          value={host}
-          onChange={(event) => setHost(event.currentTarget.value)}
+          value={name}
+          onChange={(event) => setName(event.currentTarget.value)}
           required
           rightSection={
             <Button radius="md" loading={loading} onClick={generateKey}>
@@ -155,7 +147,7 @@ const Settings = () => {
           }
           rightSectionWidth="auto"
           w={isTablet ? "100%" : "50%"}
-          error={hostError}
+          error={nameError}
         />
 
         {/* DISPLAY GENERATED API KEY */}
@@ -210,14 +202,14 @@ const Settings = () => {
               >
                 <thead>
                   <tr>
-                    <th>Host</th>
+                    <th>Name</th>
                     <th></th>
                   </tr>
                 </thead>
                 <tbody>
                   {data.map((key) => (
                     <tr key={key._id}>
-                      <td>{key.host}</td>
+                      <td>{key.name}</td>
                       <td>
                         <ActionIcon onClick={() => setSelectedKey(key)}>
                           <IconTrash size="1.3rem" />
@@ -249,14 +241,3 @@ const Settings = () => {
 };
 
 export default Settings;
-
-{
-  /* <ActionIcon
-              size={32}
-              radius="md"
-              variant="filled"
-              color={theme.primaryColor}
-            >
-              <IconArrowRight size="1.1rem" stroke={1.5} />
-            </ActionIcon> */
-}

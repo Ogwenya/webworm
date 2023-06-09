@@ -24,9 +24,9 @@ Webstorm uses `Next-auth` is used for authentication.
 
 Creating the admin user is done through the `CLI`.
 
--   The file `createAdmin.mjs` in the root directory is setup to create an admin user for the CMS
+- The file `createAdmin.mjs` in the root directory is setup to create an admin user for the CMS
 
--   The optional field is the database name in the variable `dbName` which by default is set to `webworm`
+- The optional field is the database name in the variable `dbName` which by default is set to `webworm`
 
 to create the user, in the root directory, run
 
@@ -45,3 +45,91 @@ Webworm uses cloudinary for media management.
 In your cloudinary console, create a folder called `webworm` where all assets will be stored.
 
 create an upload preset in the settings and store the name of the preset in the env variables as `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET`. This will be used to upload media to cloudinary.
+
+---
+
+## Routes
+
+- All routes for the admin panel are under the '/api/admin' routes
+
+- All routes for the api are under the '/api/vo' routes
+
+### Admin routes
+
+<br>
+
+#### Generate API Key for use by client
+
+| Route                    | Method | Data                    |
+| ------------------------ | ------ | ----------------------- |
+| `/api/admin/apiKey`      | GET    | Fetch all api keys      |
+| `/api/admin/apiKey`      | POST   | Generate new api key    |
+| `/api/admin/apiKey/[id]` | DELETE | Delete selected api key |
+
+<br>
+
+#### Fetch and delete media from cloudinary
+
+| Route                   | Method | Data                                   |
+| ----------------------- | ------ | -------------------------------------- |
+| `/api/admin/media`      | GET    | Get media for display in media manager |
+| `/api/admin/media/[id]` | DELETE | Delete media from cloudinary           |
+
+<br>
+
+#### Manage posts
+
+| Route                     | Method | Data                       | Query Params                                                                                                                                                                                                                             |
+| ------------------------- | ------ | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/api/admin/posts`        | GET    | Get all posts              | - page (current page to fetch)<br> - filter(post publish status: published or unpublished: exclude filter to get all posts)<br> -search (search string: search for post using title) <br><br> `/api/admin/posts?page=1&status=published` |
+| `/api/admin/posts`        | POST   | Create new post            |                                                                                                                                                                                                                                          |
+| `/api/admin/posts/[slug]` | GET    | Get single post using slug |                                                                                                                                                                                                                                          |
+| `/api/admin/posts/[slug]` | PATCH  | Update a post              |                                                                                                                                                                                                                                          |
+| `/api/admin/posts/[slug]` | DELETE | Delete post                |                                                                                                                                                                                                                                          |
+
+<br>
+
+#### User details
+
+| Route                       | Method | Data                |
+| --------------------------- | ------ | ------------------- |
+| `/api/admin/users/[userId]` | PATCH  | Update user details |
+
+<br>
+
+#### Privacy Policy
+
+| Route               | Method | Data                  |
+| ------------------- | ------ | --------------------- |
+| `/api/admin/policy` | GET    | Get privacy policy    |
+| `/api/admin/policy` | PATCH  | Update privacy policy |
+
+<br>
+
+#### Terms and Conditions
+
+| Route              | Method | Data                        |
+| ------------------ | ------ | --------------------------- |
+| `/api/admin/terms` | GET    | Get Terms and Conditions    |
+| `/api/admin/terms` | PATCH  | Update Terms and Conditions |
+
+<br>
+<br>
+<br>
+
+### Client API routes
+
+- ensure the api key is added to the client api call headers using:
+
+```
+headers: {
+    "x-api-key": <API KEY>
+}
+```
+
+| Route                  | Method | Data                      |
+| ---------------------- | ------ | ------------------------- |
+| `/api/v0/posts`        | GET    | Fetch all published posts |
+| `/api/v0/posts/[slug]` | GET    | Fetch single post         |
+| `/api/v0/policy`       | GET    | Get privacy policy        |
+| `/api/v0/terms`        | GET    | Get Terms and Conditions  |

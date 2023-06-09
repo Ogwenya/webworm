@@ -37,7 +37,7 @@ const DeleteApiKeyModal = ({ apiKey, closeModal }) => {
         </Alert>
       )}
       <Text>
-        Are you sure you want to delete API Key for: "{apiKey.host}" ?
+        Are you sure you want to delete API Key for: "{apiKey.name}" ?
       </Text>
       <Button
         type="submit"
