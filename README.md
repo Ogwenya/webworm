@@ -56,6 +56,7 @@ create an upload preset in the settings and store the name of the preset in the 
 
 ### Admin routes
 
+**These are the routes being used internally by the CMS.**
 <br>
 
 #### Generate API Key for use by client
@@ -119,9 +120,10 @@ create an upload preset in the settings and store the name of the preset in the 
 
 ### Client API routes
 
+- These are the routes the blog client will use to fetch data from the CMS.
 - ensure the api key is added to the client api call headers using:
 
-```
+```bash
 headers: {
     "x-api-key": <API KEY>
 }
