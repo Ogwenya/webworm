@@ -136,8 +136,10 @@ headers: {
 
 The `/api/v0/posts` can have the following query params:
 
-- page : The page number to fetch
-- per_page : The total posts to return per page
+- page : The page number to fetch.
+  - **If not provided, the default is `1`**
+- per_page : The total posts to return per page.
+  - **If not provided, the default is `10`**
 - search : The search string to search for posts
 
 #### Example
