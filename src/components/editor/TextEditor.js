@@ -87,6 +87,7 @@ const TextEditor = ({ editorContent, setEditorContent }) => {
     "link",
     "image",
     "video",
+    "code-block",
   ];
 
   return (
